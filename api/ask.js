@@ -1,17 +1,16 @@
 // api/ask.js
-// Version stable avec API REST (pas de SDK)
-
 export default async function handler(req, res) {
-  // ✅ En-têtes CORS – toujours envoyés
+  // ⭐️ En-têtes CORS – doivent être envoyés dans TOUTES les réponses
   res.setHeader('Access-Control-Allow-Origin', 'https://nezzal.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   // Gérer la requête préflight (OPTIONS)
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return res.status(200).end(); // ✅ Réponse vide mais avec status 200
   }
 
+  // Seule la méthode POST est autorisée
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
