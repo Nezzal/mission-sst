@@ -1,0 +1,367 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+  line-height: 1.6;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* En-tête */
+header {
+  text-align: center;
+  padding: 20px 0;
+  background-color: #fff;
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 20px;
+}
+header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+header p {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+}
+
+/* Navigation */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.tab-button {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #7f8c8d;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+.tab-button:hover {
+  color: #3498db;
+}
+.tab-button.active {
+  color: #3498db;
+  border-bottom: 3px solid #3498db;
+}
+
+/* Contenu principal */
+.content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.tab-content {
+  display: none;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+.tab-content.active {
+  display: block;
+}
+
+/* Cartes */
+.card, .challenge-card {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #3498db;
+}
+.challenge-card {
+  background-color: #ebf5ff;
+  border-left: 4px solid #3498db;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+.challenge-card strong {
+  color: #2980b9;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Section d'entrée (Dossier 1) */
+
+/* Graphique (Dossier 2) */
+/* Graphique (Dossier 2) */
+.chart-container {
+  margin: 20px 0;
+  text-align: center;
+}
+.chart-container h3 {
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+.bar-chart {
+  position: relative;
+  height: 300px;
+  margin-top: 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 20px 0;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.y-axis {
+  position: absolute;
+  left: -40px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  transform: translateY(-50%);
+  height: 100%;
+}
+.y-axis span {
+  transform: none;
+  line-height: 1.4;
+}
+
+.bar-group {
+  display: flex;
+  gap: 20px;
+  height: 100%;
+  align-items: flex-end;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.bar {
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  word-wrap: break-word;
+  font-size: 0.8rem; /* Réduit la taille de la police */
+  line-height: 1.3;
+  min-height: 30px; /* Assure un minimum d'espace */
+}
+.bar span {
+  margin-top: 5px;
+  text-align: center;
+  word-break: break-word;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+/* Cartes d'outils (Dossier 3) */
+.tool-cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+.tool-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  width: 250px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+.tool-card:hover {
+  transform: translateY(-2px);
+}
+.tool-card h3 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+.tool-card p {
+  color: #7f8c8d;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+.source {
+  color: #3498db;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Boutons acteurs (Dossier 4) */
+.actor-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+}
+.actor-btn {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 12px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+  min-width: 150px;
+  text-align: center;
+}
+.actor-btn:hover {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+.actor-btn.active {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+.instructions {
+  text-align: center;
+  margin: 15px 0;
+  color: #7f8c8d;
+  font-style: italic;
+}
+.actor-info {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  text-align: center;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+/* Réponses IA */
+.ai-response {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #3498db;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* QR Code */
+#qrcode {
+  margin: 20px auto;
+  text-align: center;
+}
+#qrcode canvas {
+  max-width: 200px;
+  max-height: 200px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 2rem;
+  }
+  .tabs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tab-button {
+    text-align: center;
+  }
+  .tool-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+  .tool-card {
+    width: 100%;
+    max-width: 300px;
+  }
+  .bar-chart {
+    height: 250px;
+  }
+  .bar {
+    width: 60px;
+  }
+  .actor-btn {
+    width: 100%;
+    max-width: 250px;
+  }
+}
+/* Fond blanc pour le graphique */
+.bar-chart {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Bouton Copier */
+.copy-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.copy-btn:hover:not(:disabled) {
+  background-color: #27ae60;
+}
+
+.copy-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.ai-answer-box {
+  background-color: #f9f9f9;
+  padding: 12px;
+  border-left: 4px solid #3498db;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+
+
+/* Pour le bouton flottant (si tu veux l'ajouter plus tard) */
+/* .floating-menu {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: #2c3e50;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+} */

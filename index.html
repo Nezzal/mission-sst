@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mission SST : Bâtir la Prévention</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Ajouter Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- En-tête avec titre -->
+    <header>
+      <h1>Mission SST : Bâtir la Prévention</h1>
+      <p>Un tableau de bord interactif pour maîtriser le cadre légal</p>
+    </header>
+
+    <!-- Navigation par onglets -->
+    <nav class="tabs">
+      <button class="tab-button active" data-tab="briefing">Briefing</button>
+      <button class="tab-button" data-tab="dossier1">Dossier 1</button>
+      <button class="tab-button" data-tab="dossier2">Dossier 2</button>
+      <button class="tab-button" data-tab="dossier3">Dossier 3</button>
+      <button class="tab-button" data-tab="dossier4">Dossier 4</button>
+      <button class="tab-button" data-tab="debriefing">Débriefing</button>
+    </nav>
+
+    <!-- Contenu des onglets -->
+    <main class="content">
+
+      <!-- Briefing -->
+      <section id="briefing" class="tab-content active">
+        <h2>Phase 1 : Briefing de Mission</h2>
+        <div class="card">
+          <strong>Directeur de Mission (Présentateur) :</strong>
+          <p>"Bonjour, docteurs. Votre mission : auditer l'entreprise 'Solutions Industrielles Algériennes'. Nous allons construire son Dossier de Prévention, de A à Z. Chaque phase est un 'Dossier d'Intervention' à valider. Notre atout tactique est notre analyste IA, LegiMedTrav-AI. Il est notre expert juridique embarqué, avec un accès instantané à toute la législation algérienne en SST."</p>
+        </div>
+      </section>
+
+      <!-- Dossier 1 -->
+      <section id="dossier1" class="tab-content">
+        <h2>Dossier 1 : Cadre Légal et Responsabilités</h2>
+        <div class="challenge-card">
+          <strong>Le Défi :</strong>
+          <p>Face à un manquement à la sécurité, un chef d'atelier déclare : 'Ce n'est pas mon problème'. Le travailleur affirme : 'On ne m'a rien donné'. Comment démêler les responsabilités pour agir efficacement ?</p>
+        </div>
+        <div class="input-section">
+          <label>Décrivez votre scénario ici :</label>
+          <textarea placeholder="Ex: Un travailleur sur un chantier a chuté d'un échafaudage non sécurisé. Il ne portait pas de casque."></textarea>
+          <button class="analyze-btn" onclick="askAI('Analyser le scénario du Dossier 1')">Analyser le scénario ✨</button>
+          <div id="response1" class="ai-response"></div>
+        </div>
+      </section>
+
+      <!-- Dossier 2 -->
+      <!-- Dossier 2 -->
+<section id="dossier2" class="tab-content">
+  <h2>Dossier 2 : Plan de Surveillance Médicale</h2>
+  <div class="challenge-card">
+    <strong>Le Défi :</strong>
+    <p>L'entreprise emploie des soudeurs, caristes et administratifs. Comment organiser leur suivi médical ?</p>
+  </div>
+  <div class="chart-container">
+    <h3>Fréquence de la Surveillance Médicale</h3>
+    <canvas id="surveillanceChart" width="400" height="300"></canvas>
+  </div>
+  <div class="action-buttons">
+    <button onclick="askAI('Quelle est la fréquence de surveillance médicale pour les soudeurs, caristes et administratifs en Algérie ?')">Fréquence de surveillance</button>
+    <div id="response2" class="ai-response"></div>
+  </div>
+</section>
+
+      <!-- Dossier 3 -->
+      <section id="dossier3" class="tab-content">
+        <h2>Dossier 3 : Les Outils du Médecin</h2>
+        <div class="challenge-card">
+          <strong>Le Défi :</strong>
+          <p>Un inspecteur du travail arrive pour un contrôle. Quels sont les 3 documents CLÉS à présenter ?</p>
+        </div>
+        <div class="tool-cards">
+          <div class="tool-card">
+            <h3>Dossier Médical Individuel</h3>
+            <p>Tracer le parcours santé-travail du salarié (confidentiel).</p>
+            <p class="source">(Décret 06-01)</p>
+          </div>
+          <div class="tool-card">
+            <h3>Rapport Annuel d'Activité</h3>
+            <p>Fournir une synthèse anonyme et des recommandations.</p>
+            <p class="source">(Arrêté du 16 oct. 2001)</p>
+          </div>
+          <div class="tool-card">
+            <h3>Registres Obligatoires</h3>
+            <p>Prouver la réalisation des actes (visites, vaccinations...).</p>
+            <p class="source">(Arrêté du 16 oct. 2001)</p>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button onclick="askAI('Quels sont les 3 documents obligatoires à présenter à un inspecteur du travail en Algérie selon la réglementation SST ?')">Documents clés</button>
+          <div id="response3" class="ai-response"></div>
+        </div>
+      </section>
+
+      <!-- Dossier 4 -->
+      <section id="dossier4" class="tab-content">
+        <h2>Dossier 4 : L’Écosystème de la Prévention</h2>
+        <div class="challenge-card">
+          <strong>Le Défi :</strong>
+          <p>Vous identifiez un risque à la cantine et la CNAS vous contacte pour une enquête sur une maladie professionnelle. Qui sont vos alliés ?</p>
+        </div>
+        <p class="instructions">Cliquez sur un acteur pour voir les détails de la collaboration.</p>
+        <div class="actor-buttons">
+          <button class="actor-btn" onclick="showActorInfo('chs')">CHS</button>
+          <button class="actor-btn" onclick="showActorInfo('hygiene')">Service d'Hygiène</button>
+          <button class="actor-btn" onclick="showActorInfo('inspection')">Inspection du Travail</button>
+          <button class="actor-btn" onclick="showActorInfo('medecin')">Médecin du Travail</button>
+          <button class="actor-btn" onclick="showActorInfo('cnas')">CNAS</button>
+        </div>
+        <div id="actor-info" class="actor-info"></div>
+        <div class="action-buttons">
+          <button onclick="askAI('Qui sont les acteurs clés de la prévention SST en Algérie et quel est leur rôle ?')">Alliés SST</button>
+          <div id="response4" class="ai-response"></div>
+        </div>
+      </section>
+
+      <!-- Débriefing -->
+      <section id="debriefing" class="tab-content">
+        <h2>Phase 6 : Débriefing Final de Mission</h2>
+        <div class="card">
+          <p>Mission accomplie ! Nous avons bâti une stratégie de prévention solide et conforme. La réglementation n'est pas une contrainte, mais une feuille de route.</p>
+          <p>"Mais la vraie mission commence demain. Pour cela, LegiMedTrav-AI est transféré sur vos terminaux."</p>
+          <p>Scannez pour accéder à l'outil :</p>
+          <div id="qrcode"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
