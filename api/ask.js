@@ -9,7 +9,7 @@ if (!GEMINI_API_KEY) {
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-// Utilitaire pour lire le corps de la requête (nécessaire sur Vercel sans framework)
+// Fonction utilitaire pour lire le corps de la requête
 async function readRequestBody(req) {
   const chunks = [];
   for await (const chunk of req) {
