@@ -1,21 +1,33 @@
 // api/ask.js
 export default async function handler(req, res) {
-  // ⭐️ En-têtes CORS – doivent être envoyés dans TOUTES les réponses
-  res.setHeader('Access-Control-Allow-Origin', 'https://nezzal.github.io');
+  // 🔐 Gestion flexible des origines CORS (pour local + production)
+  const allowedOrigins = [
+    'https://nezzal.github.io',
+    'http://127.0.0.1:5500',
+    'http://localhost:5500',
+    'http://localhost:8080',
+    'http://localhost:3000'
+  ];
+  const origin = req.headers.origin;
+  const allowedOrigin = allowedOrigins.includes(origin) ? origin : 'https://nezzal.github.io';
+
+  // ⚙️ Appliquer les en-têtes CORS
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
 
-  // Gérer la requête préflight (OPTIONS)
+  // 🛑 Requête OPTIONS (preflight CORS)
   if (req.method === 'OPTIONS') {
-    return res.status(200).end(); // ✅ Réponse vide mais avec status 200
+    return res.status(200).end();
   }
 
-  // Seule la méthode POST est autorisée
+  // 🚫 Seule la méthode POST est autorisée
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Méthode non autorisée. Utilisez POST.' });
   }
 
-  // Lire le corps de la requête
+  // 🔍 Lire le corps de la requête
   let rawBody = '';
   for await (const chunk of req) {
     rawBody += chunk.toString();
@@ -28,9 +40,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Requête JSON invalide.' });
   }
 
-  const { prompt } = body;
-  if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
-    return res.status(400).json({ error: 'Le champ "prompt" est requis.' });
+  // ✅ Lire "question" (pas "prompt")
+  const { question } = body;
+  if (!question || typeof question !== 'string' || question.trim() === '') {
+    return res.status(400).json({ error: 'Le champ "question" est requis.' });
   }
 
   // 🔑 Récupérer la clé API
@@ -40,16 +53,16 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Erreur interne : clé API manquante.' });
   }
 
-  // 💬 Construire le prompt
+  // 💬 Construire le prompt système
   const systemPrompt = `
 Tu es LegiMedTrav-AI, expert en réglementation algérienne Santé et Sécurité au Travail (SST).
 Réponds de façon claire, concise, professionnelle et pédagogique.
 Cite systématiquement les textes applicables (ex: Loi 02-04, Décret 06-01, Arrêté du 16 octobre 2001).
 Ne donne jamais d’avis médical, seulement des références réglementaires.
-Question : ${prompt.trim()}
+Question : ${question.trim()}
   `.trim();
 
-  // 🌐 Appel à l'API REST de Gemini
+  // 🌐 Appel à l’API Gemini (URL corrigée, sans espaces)
   try {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
@@ -63,29 +76,28 @@ Question : ${prompt.trim()}
     );
 
     if (!response.ok) {
-      const errorData = await response.text();
-      console.error('Erreur Gemini API (HTTP):', response.status, errorData);
-      return res.status(500).json({ error: 'Échec de la réponse IA.' });
+      const errorText = await response.text();
+      console.error('Erreur Gemini (HTTP):', response.status, errorText);
+      return res.status(500).json({ error: 'Échec de la réponse IA (serveur).' });
     }
 
     const data = await response.json();
     const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!aiResponse) {
-      console.error('Réponse IA vide ou mal formée:', data);
-      return res.status(500).json({ error: 'Réponse IA incomplète.' });
+      console.error('Réponse IA vide:', data);
+      return res.status(500).json({ error: 'Réponse IA vide ou invalide.' });
     }
 
-    // Nettoyer les blocs de code markdown éventuels
     const cleanResponse = aiResponse
-      .replace(/^```(html|markdown|javascript)?\s*/i, '')
+      .replace(/^```(?:html|markdown|javascript)?\s*/i, '')
       .replace(/\s*```$/, '')
       .trim();
 
     return res.status(200).json({ response: cleanResponse });
 
   } catch (error) {
-    console.error('Erreur lors de l’appel à l’IA :', error);
+    console.error('Erreur serveur:', error);
     return res.status(500).json({ error: 'Erreur interne du serveur.' });
   }
 }
