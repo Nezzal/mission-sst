@@ -15,79 +15,81 @@ function askAIFromInput(dossierId) {
 // === 1. Navigation entre onglets ===
 document.querySelectorAll('.tab-button').forEach(button => {
   button.addEventListener('click', () => {
-    // Retirer la classe 'active' de tous les onglets
     document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-    // Ajouter 'active' à l'onglet cliqué
     button.classList.add('active');
     const target = button.getAttribute('data-tab');
     document.getElementById(target).classList.add('active');
   });
 });
 
-// === 2. Fonction askAI : appel à l'API Vercel + bouton Copier ===
+// === 2. Fonction askAI : appel à l'API avec { question } ===
 async function askAI(question) {
-  // Déterminer la zone de réponse en fonction de l’onglet actif ou du contenu de la question
+  // Déterminer la zone de réponse
   let responseDiv = null;
   const activeTab = document.querySelector('.tab-content.active');
   const tabId = activeTab?.id;
 
-  if (tabId === 'dossier1') {
-    responseDiv = document.getElementById('response1');
-  } else if (tabId === 'dossier2') {
-    responseDiv = document.getElementById('response2');
-  } else if (tabId === 'dossier3') {
-    responseDiv = document.getElementById('response3');
-  } else if (tabId === 'dossier4') {
-    responseDiv = document.getElementById('response4');
-  }
+  if (tabId === 'dossier1') responseDiv = document.getElementById('response1');
+  else if (tabId === 'dossier2') responseDiv = document.getElementById('response2');
+  else if (tabId === 'dossier3') responseDiv = document.getElementById('response3');
+  else if (tabId === 'dossier4') responseDiv = document.getElementById('response4');
 
   if (!responseDiv) {
-    console.warn('Aucune zone de réponse trouvée.');
+    console.warn('Zone de réponse non trouvée.');
     return;
   }
 
-  // Réinitialiser le contenu
   responseDiv.innerHTML = 'LegiMedTrav-AI réfléchit...';
 
-  // Timeout de 10 secondes
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s
 
   try {
-    // ✅ URL sans espaces !
+    // ✅ URL corrigée + envoi de { question }
     const res = await fetch('https://mission-sst.vercel.app/api/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question }),
+      body: JSON.stringify({ question }), // 🔑 Aligné sur le backend
       signal: controller.signal
     });
 
     clearTimeout(timeoutId);
 
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.error || `HTTP ${res.status}`);
+    let data;
+    try {
+      data = await res.json();
+    } catch (e) {
+      throw new Error('Réponse invalide du serveur.');
     }
 
-    const data = await res.json();
-    const answerText = data.response || data.answer || 'Aucune réponse reçue.';
+    if (!res.ok) {
+      throw new Error(data.error || `Erreur ${res.status}`);
+    }
+
+    const answerText = data.response || 'Aucune réponse reçue.';
+
+    // Échapper les caractères dangereux pour le template string
+    const safeAnswer = answerText
+      .replace(/\\/g, '\\\\')
+      .replace(/`/g, '\\`')
+      .replace(/\$/g, '\\$');
 
     responseDiv.innerHTML = `
       <div class="ai-answer-box">
         <strong>✨ LegiMedTrav-AI :</strong><br>
         ${answerText}
       </div>
-      <button class="copy-btn" onclick="copyToClipboard(this, \`${answerText.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">Copier la réponse</button>
+      <button class="copy-btn" onclick="copyToClipboard(this, \`${safeAnswer}\`)">Copier la réponse</button>
     `;
 
   } catch (err) {
     clearTimeout(timeoutId);
     if (err.name === 'AbortError') {
-      responseDiv.textContent = '⏰ Délai dépassé. Veuillez réessayer.';
+      responseDiv.textContent = '⏰ Délai dépassé. Réessayez.';
     } else {
-      responseDiv.textContent = `❌ Erreur : ${err.message || 'Impossible de contacter l’IA.'}`;
+      responseDiv.textContent = `❌ ${err.message || 'Échec de la connexion à l’IA.'}`;
     }
     console.error('Erreur API :', err);
   }
@@ -96,16 +98,16 @@ async function askAI(question) {
 // === Fonction de copie ===
 function copyToClipboard(button, text) {
   navigator.clipboard.writeText(text).then(() => {
-    const originalText = button.textContent;
+    const original = button.textContent;
     button.textContent = '✅ Copié !';
     button.disabled = true;
     setTimeout(() => {
-      button.textContent = originalText;
+      button.textContent = original;
       button.disabled = false;
     }, 2000);
   }).catch(err => {
     console.error('Échec de la copie :', err);
-    alert('Impossible de copier. Veuillez sélectionner le texte manuellement.');
+    alert('Impossible de copier. Sélectionnez le texte manuellement.');
   });
 }
 
@@ -122,15 +124,14 @@ function showActorInfo(actorKey) {
   infoDiv.innerHTML = infos[actorKey] || "Informations non disponibles.";
 }
 
-// === 4. Graphique – Dossier 2 ===
-// === 5. QR Code – Débriefing ===
+// === 4. Initialisation (Graphique + QR Code) ===
 document.addEventListener('DOMContentLoaded', () => {
-  // Graphique
+  // Graphique – Dossier 2
   const ctx = document.getElementById('surveillanceChart');
   if (ctx) {
     new Chart(ctx, {
       type: 'bar',
-      data: {
+       {
         labels: ['Soudeurs (travail chaud)', 'Caristes (manutention)', 'Administratifs (bureau)'],
         datasets: [{
           label: 'Fréquence de la visite médicale (en mois)',
@@ -156,12 +157,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // QR Code
+  // QR Code – Débriefing
   const qrcodeDiv = document.getElementById('qrcode');
   if (qrcodeDiv) {
-    const currentUrl = window.location.href;
     new QRCode(qrcodeDiv, {
-      text: currentUrl,
+      text: window.location.href,
       width: 160,
       height: 160,
       colorDark: "#000000",
