@@ -1,3 +1,17 @@
+// === Fonction spéciale pour le Dossier 1 : lire la saisie utilisateur ===
+function askAIFromInput(dossierId) {
+  if (dossierId === 'dossier1') {
+    const input = document.getElementById('dossier1-input');
+    const question = input?.value.trim();
+    if (!question) {
+      const responseDiv = document.querySelector('#dossier1 .ai-response');
+      if (responseDiv) responseDiv.textContent = '⚠️ Veuillez décrire un scénario.';
+      return;
+    }
+    askAI(question);
+  }
+}
+
 // === 1. Navigation entre onglets ===
 document.querySelectorAll('.tab-button').forEach(button => {
   button.addEventListener('click', () => {
@@ -14,39 +28,68 @@ document.querySelectorAll('.tab-button').forEach(button => {
 
 // === 2. Fonction askAI : appel à l'API Vercel + bouton Copier ===
 async function askAI(question) {
+  // Déterminer la zone de réponse en fonction de l’onglet actif ou du contenu de la question
+  let responseDiv = null;
   const activeTab = document.querySelector('.tab-content.active');
-  const responseDiv = activeTab ? activeTab.querySelector('.ai-response') : null;
+  const tabId = activeTab?.id;
 
-  if (!responseDiv) return;
+  if (tabId === 'dossier1') {
+    responseDiv = document.getElementById('response1');
+  } else if (tabId === 'dossier2') {
+    responseDiv = document.getElementById('response2');
+  } else if (tabId === 'dossier3') {
+    responseDiv = document.getElementById('response3');
+  } else if (tabId === 'dossier4') {
+    responseDiv = document.getElementById('response4');
+  }
+
+  if (!responseDiv) {
+    console.warn('Aucune zone de réponse trouvée.');
+    return;
+  }
 
   // Réinitialiser le contenu
   responseDiv.innerHTML = 'LegiMedTrav-AI réfléchit...';
 
+  // Timeout de 10 secondes
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+
   try {
+    // ✅ URL sans espaces !
     const res = await fetch('https://mission-9jqm5tl54-nezzal-abdelmaleks-projects.vercel.app/api/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question })
+      body: JSON.stringify({ question }),
+      signal: controller.signal
     });
 
-    const data = await res.json();
-    let answerText = '';
+    clearTimeout(timeoutId);
 
-    if (res.ok) {
-      answerText = data.answer || 'Aucune réponse reçue.';
-      responseDiv.innerHTML = `
-        <div class="ai-answer-box">
-          <strong>✨ LegiMedTrav-AI :</strong><br>
-          ${answerText}
-        </div>
-        <button class="copy-btn" onclick="copyToClipboard(this, \`${answerText.replace(/`/g, '\\`')}\`)">Copier la réponse</button>
-      `;
-    } else {
-      responseDiv.textContent = `❌ Erreur : ${data.error || 'Échec de la requête.'}`;
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.error || `HTTP ${res.status}`);
     }
+
+    const data = await res.json();
+    const answerText = data.response || data.answer || 'Aucune réponse reçue.';
+
+    responseDiv.innerHTML = `
+      <div class="ai-answer-box">
+        <strong>✨ LegiMedTrav-AI :</strong><br>
+        ${answerText}
+      </div>
+      <button class="copy-btn" onclick="copyToClipboard(this, \`${answerText.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">Copier la réponse</button>
+    `;
+
   } catch (err) {
-    responseDiv.textContent = '❌ Impossible de contacter l’IA. Vérifiez votre connexion.';
-    console.error(err);
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      responseDiv.textContent = '⏰ Délai dépassé. Veuillez réessayer.';
+    } else {
+      responseDiv.textContent = `❌ Erreur : ${err.message || 'Impossible de contacter l’IA.'}`;
+    }
+    console.error('Erreur API :', err);
   }
 }
 
@@ -62,7 +105,7 @@ function copyToClipboard(button, text) {
     }, 2000);
   }).catch(err => {
     console.error('Échec de la copie :', err);
-    alert('Impossible de copier le texte. Veuillez le sélectionner manuellement.');
+    alert('Impossible de copier. Veuillez sélectionner le texte manuellement.');
   });
 }
 
@@ -80,8 +123,9 @@ function showActorInfo(actorKey) {
 }
 
 // === 4. Graphique – Dossier 2 ===
-// === 4. Graphique – Dossier 2 ===
+// === 5. QR Code – Débriefing ===
 document.addEventListener('DOMContentLoaded', () => {
+  // Graphique
   const ctx = document.getElementById('surveillanceChart');
   if (ctx) {
     new Chart(ctx, {
@@ -104,15 +148,15 @@ document.addEventListener('DOMContentLoaded', () => {
         scales: {
           y: {
             beginAtZero: true,
-            title: { display: true, text: 'Mois entre deux visites' },
-            reverse: false  // ✅ CORRECTION : 0 en bas, valeurs croissantes vers le haut
+            reverse: false,
+            title: { display: true, text: 'Mois entre deux visites' }
           }
         }
       }
     });
   }
 
-  // === 5. QR Code – Débriefing ===
+  // QR Code
   const qrcodeDiv = document.getElementById('qrcode');
   if (qrcodeDiv) {
     const currentUrl = window.location.href;

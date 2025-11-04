@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mission SST : Bâtir la Prévention</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Ajouter Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js (sans espace dans l'URL) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="app-container">
@@ -38,7 +38,7 @@
         </div>
       </section>
 
-      <!-- Dossier 1 -->
+      <!-- Dossier 1 : CORRIGÉ -->
       <section id="dossier1" class="tab-content">
         <h2>Dossier 1 : Cadre Légal et Responsabilités</h2>
         <div class="challenge-card">
@@ -47,29 +47,30 @@
         </div>
         <div class="input-section">
           <label>Décrivez votre scénario ici :</label>
-          <textarea placeholder="Ex: Un travailleur sur un chantier a chuté d'un échafaudage non sécurisé. Il ne portait pas de casque."></textarea>
-          <button class="analyze-btn" onclick="askAI('Analyser le scénario du Dossier 1')">Analyser le scénario ✨</button>
+          <!-- ✅ Ajout de l'ID pour pouvoir lire la valeur -->
+          <textarea id="dossier1-input" placeholder="Ex: Un travailleur sur un chantier a chuté d'un échafaudage non sécurisé. Il ne portait pas de casque."></textarea>
+          <!-- ✅ Appel à une fonction dédiée -->
+          <button class="analyze-btn" onclick="askAIFromInput('dossier1')">Analyser le scénario ✨</button>
           <div id="response1" class="ai-response"></div>
         </div>
       </section>
 
       <!-- Dossier 2 -->
-      <!-- Dossier 2 -->
-<section id="dossier2" class="tab-content">
-  <h2>Dossier 2 : Plan de Surveillance Médicale</h2>
-  <div class="challenge-card">
-    <strong>Le Défi :</strong>
-    <p>L'entreprise emploie des soudeurs, caristes et administratifs. Comment organiser leur suivi médical ?</p>
-  </div>
-  <div class="chart-container">
-    <h3>Fréquence de la Surveillance Médicale</h3>
-    <canvas id="surveillanceChart" width="400" height="300"></canvas>
-  </div>
-  <div class="action-buttons">
-    <button onclick="askAI('Quelle est la fréquence de surveillance médicale pour les soudeurs, caristes et administratifs en Algérie ?')">Fréquence de surveillance</button>
-    <div id="response2" class="ai-response"></div>
-  </div>
-</section>
+      <section id="dossier2" class="tab-content">
+        <h2>Dossier 2 : Plan de Surveillance Médicale</h2>
+        <div class="challenge-card">
+          <strong>Le Défi :</strong>
+          <p>L'entreprise emploie des soudeurs, caristes et administratifs. Comment organiser leur suivi médical ?</p>
+        </div>
+        <div class="chart-container">
+          <h3>Fréquence de la Surveillance Médicale</h3>
+          <canvas id="surveillanceChart" width="400" height="300"></canvas>
+        </div>
+        <div class="action-buttons">
+          <button onclick="askAI('Quelle est la fréquence de surveillance médicale pour les soudeurs, caristes et administratifs en Algérie ?')">Fréquence de surveillance</button>
+          <div id="response2" class="ai-response"></div>
+        </div>
+      </section>
 
       <!-- Dossier 3 -->
       <section id="dossier3" class="tab-content">
