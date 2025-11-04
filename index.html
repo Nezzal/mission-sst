@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mission SST : Bâtir la Prévention</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Chart.js (sans espace dans l'URL) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="app-container">
@@ -38,7 +36,7 @@
         </div>
       </section>
 
-      <!-- Dossier 1 : CORRIGÉ -->
+      <!-- Dossier 1 -->
       <section id="dossier1" class="tab-content">
         <h2>Dossier 1 : Cadre Légal et Responsabilités</h2>
         <div class="challenge-card">
@@ -47,9 +45,7 @@
         </div>
         <div class="input-section">
           <label>Décrivez votre scénario ici :</label>
-          <!-- ✅ Ajout de l'ID pour pouvoir lire la valeur -->
           <textarea id="dossier1-input" placeholder="Ex: Un travailleur sur un chantier a chuté d'un échafaudage non sécurisé. Il ne portait pas de casque."></textarea>
-          <!-- ✅ Appel à une fonction dédiée -->
           <button class="analyze-btn" onclick="askAIFromInput('dossier1')">Analyser le scénario ✨</button>
           <div id="response1" class="ai-response"></div>
         </div>
@@ -138,7 +134,8 @@
     </main>
   </div>
 
-  <!-- Scripts -->
+  <!-- Scripts placés à la fin, sans espaces dans les URLs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="script.js"></script>
 </body>

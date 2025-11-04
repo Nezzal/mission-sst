@@ -26,7 +26,6 @@ document.querySelectorAll('.tab-button').forEach(button => {
 
 // === 2. Fonction askAI : appel à l'API avec { question } ===
 async function askAI(question) {
-  // Déterminer la zone de réponse
   let responseDiv = null;
   const activeTab = document.querySelector('.tab-content.active');
   const tabId = activeTab?.id;
@@ -44,14 +43,13 @@ async function askAI(question) {
   responseDiv.innerHTML = 'LegiMedTrav-AI réfléchit...';
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s
+  const timeoutId = setTimeout(() => controller.abort(), 12000);
 
   try {
-    // ✅ URL corrigée + envoi de { question }
     const res = await fetch('https://mission-sst.vercel.app/api/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question }), // 🔑 Aligné sur le backend
+      body: JSON.stringify({ question }),
       signal: controller.signal
     });
 
@@ -69,8 +67,6 @@ async function askAI(question) {
     }
 
     const answerText = data.response || 'Aucune réponse reçue.';
-
-    // Échapper les caractères dangereux pour le template string
     const safeAnswer = answerText
       .replace(/\\/g, '\\\\')
       .replace(/`/g, '\\`')
@@ -127,35 +123,36 @@ function showActorInfo(actorKey) {
 // === 4. Initialisation (Graphique + QR Code) ===
 document.addEventListener('DOMContentLoaded', () => {
   // Graphique – Dossier 2
-  const ctx = document.getElementById('surveillanceChart');
-  if (ctx) {
-    new Chart(ctx, {
-      type: 'bar',
-       {
-        labels: ['Soudeurs (travail chaud)', 'Caristes (manutention)', 'Administratifs (bureau)'],
-        datasets: [{
-          label: 'Fréquence de la visite médicale (en mois)',
-          data: [6, 12, 24],
-          backgroundColor: ['#e74c3c', '#3498db', '#2ecc71'],
-          borderWidth: 1
-        }]
+  // Graphique – Dossier 2
+const ctx = document.getElementById('surveillanceChart');
+if (ctx) {
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Soudeurs (travail chaud)', 'Caristes (manutention)', 'Administratifs (bureau)'],
+      datasets: [{
+        label: 'Fréquence de la visite médicale (en mois)',
+        data: [6, 12, 24],
+        backgroundColor: ['#e74c3c', '#3498db', '#2ecc71'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true },
+        tooltip: { enabled: true }
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: true },
-          tooltip: { enabled: true }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            reverse: false,
-            title: { display: true, text: 'Mois entre deux visites' }
-          }
+      scales: {
+        y: {
+          beginAtZero: true,
+          reverse: false,
+          title: { display: true, text: 'Mois entre deux visites' }
         }
       }
-    });
-  }
+    }
+  });
+}
 
   // QR Code – Débriefing
   const qrcodeDiv = document.getElementById('qrcode');
