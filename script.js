@@ -57,7 +57,7 @@ async function askAI(question) {
 
   try {
     // ✅ URL sans espaces !
-    const res = await fetch('https://mission-9jqm5tl54-nezzal-abdelmaleks-projects.vercel.app/api/ask', {
+    const res = await fetch('https://mission-sst.vercel.app/api/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ question }),
