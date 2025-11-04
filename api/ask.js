@@ -1,6 +1,6 @@
 // api/ask.js
 export default async function handler(req, res) {
-  // 🔐 Gestion flexible des origines CORS (pour local + production)
+  // Gestion flexible des origines CORS (pour local + production)
   const allowedOrigins = [
     'https://nezzal.github.io',
     'http://127.0.0.1:5500',
